@@ -1,0 +1,40 @@
+{
+  "name": "intern-portal",
+  "version": "1.0.0",
+  "description": "A modern intern portal dashboard for tracking donations and achievements",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "install-backend": "cd backend && npm install",
+    "install-frontend": "cd frontend && npm install",
+    "install-all": "npm run install-backend && npm run install-frontend",
+    "build": "echo 'Building frontend...' && cd frontend && npm run build",
+    "test": "cd backend && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/intern-portal.git"
+  },
+  "keywords": [
+    "intern",
+    "portal",
+    "dashboard",
+    "donations",
+    "leaderboard",
+    "achievements",
+    "node.js",
+    "express",
+    "mongodb"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/intern-portal/issues"
+  },
+  "homepage": "https://github.com/yourusername/intern-portal#readme",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}

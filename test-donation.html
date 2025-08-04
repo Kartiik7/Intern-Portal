@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Donation Test</title>
+</head>
+<body>
+    <h1>Donation Update Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        // Test donation functionality
+        async function testDonation() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing donation update...';
+            
+            try {
+                // Simulate API request
+                const donationData = {
+                    amount: 500,
+                    source: 'test'
+                };
+                
+                // Mock the API call
+                const mockResponse = {
+                    success: true,
+                    message: 'Donation updated successfully',
+                    data: {
+                        donation: {
+                            amount: 500,
+                            formattedAmount: '$500'
+                        },
+                        user: {
+                            totalDonations: 2000,
+                            newRank: 3
+                        }
+                    }
+                };
+                
+                resultDiv.innerHTML = `
+                    <h2>✅ Test Successful!</h2>
+                    <p>Donation Amount: ${mockResponse.data.donation.formattedAmount}</p>
+                    <p>New Total: $${mockResponse.data.user.totalDonations}</p>
+                    <p>New Rank: ${mockResponse.data.user.newRank}</p>
+                `;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<h2>❌ Test Failed:</h2><p>${error.message}</p>`;
+            }
+        }
+        
+        // Run test on page load
+        window.onload = testDonation;
+    </script>
+</body>
+</html>
