@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intern Portal Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <meta name="description" content="Modern intern portal dashboard for tracking donations, achievements, and leaderboard rankings">
+    <meta name="keywords" content="intern, portal, dashboard, donations, leaderboard, achievements">
+</head>
+<body class="light">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading Intern Portal...</p>
+        </div>
+    </div>
+
+    <!-- Auth Screen -->
+    <div id="authScreen" class="page active">
+        <div class="auth-container">
+            <div class="card auth-card">
+                <div class="auth-header">
+                    <div class="logo-container">
+                        <div class="logo-icon">⚡</div>
+                        <h1 class="auth-title">Intern Portal</h1>
+                    </div>
+                    <p class="auth-subtitle" id="authSubtitle">Sign in to your dashboard</p>
+                </div>
+                
+                <form id="authForm" class="auth-form">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-input" placeholder="intern@company.com" required>
+                        <div class="input-error" id="emailError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                        <div class="input-error" id="passwordError"></div>
+                    </div>
+
+                    <div class="form-group" id="nameGroup" style="display: none;">
+                        <label class="form-label" for="name">Full Name</label>
+                        <input type="text" id="name" class="form-input" placeholder="John Doe">
+                        <div class="input-error" id="nameError"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full" id="authBtn">
+                        <span id="authBtnText">Sign In</span>
+                        <span id="authBtnLoader" class="loading hidden">
+                            <div class="spinner-small"></div>
+                        </span>
+                    </button>
+
+                    <div class="form-error" id="formError"></div>
+                </form>
+                
+                <div class="auth-toggle">
+                    <span id="toggleText">Don't have an account?</span>
+                    <button type="button" id="toggleAuth" class="link-button">Sign up</button>
+                </div>
+
+                <div class="auth-footer">
+                    <div class="demo-notice">
+                        <span class="demo-icon">ℹ️</span>
+                        Demo Portal - Create any account to explore
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="page">
+        <!-- Header -->
+        <header class="header">
+            <nav class="container">
+                <div class="nav">
+                    <div class="logo">
+                        <span class="logo-icon">⚡</span>
+                        <span class="logo-text">InternPortal</span>
+                    </div>
+                    <div class="nav-links">
+                        <a href="#" class="nav-link active" data-page="dashboard">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                        <a href="#" class="nav-link" data-page="leaderboard">
+                            <span class="nav-icon">🏆</span>
+                            <span class="nav-text">Leaderboard</span>
+                        </a>
+                        <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                            <span id="themeIcon">🌙</span>
+                        </button>
+                        <div class="user-menu">
+                            <button class="user-avatar" id="userMenuBtn">
+                                <span id="userInitials">U</span>
+                            </button>
+                            <div class="user-dropdown" id="userDropdown">
+                                <div class="user-info">
+                                    <div class="user-name" id="headerUserName">User</div>
+                                    <div class="user-email" id="headerUserEmail">user@example.com</div>
+                                </div>
+                                <hr class="dropdown-divider">
+                                <a href="#" class="dropdown-item" id="settingsBtn">
+                                    <span>⚙️</span> Settings
+                                </a>
+                                <a href="#" class="dropdown-item" id="logoutBtn">
+                                    <span>🚪</span> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container">
+            <!-- Dashboard -->
+            <div id="dashboard" class="dashboard active">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h1 class="welcome-title">
+                        Welcome back, <span id="internName">Intern</span>! 👋
+                    </h1>
+                    <p class="welcome-subtitle">Track your progress and unlock amazing rewards</p>
+                </div>
+
+                <!-- Quick Stats Cards -->
+                <div class="stats-grid">
+                    <div class="card stat-card referral-stat" id="referralCard">
+                        <div class="stat-header">
+                            <h3 class="stat-label">Your Referral Code</h3>
+                            <div class="stat-icon">🔗</div>
+                        </div>
+                        <div class="stat-value" id="referralCode">LOADING...</div>
+                        <button class="stat-action" onclick="copyReferralCode()">
+                            <span id="copyButtonText">Click to copy</span>
+                        </button>
+                    </div>
+                    
+                    <div class="card stat-card donations-stat">
+                        <div class="stat-header">
+                            <h3 class="stat-label">Total Donations</h3>
+                            <div class="stat-icon">💰</div>
+                        </div>
+                        <div class="stat-value" id="totalDonations">$0</div>
+                        <div class="stat-meta" id="weeklyProgress">+$0 this week</div>
+                    </div>
+
+                    <div class="card stat-card rank-stat">
+                        <div class="stat-header">
+                            <h3 class="stat-label">Current Rank</h3>
+                            <div class="stat-icon">📈</div>
+                        </div>
+                        <div class="stat-value" id="currentRank">#999</div>
+                        <div class="stat-meta" id="totalInterns">of 0 interns</div>
+                    </div>
+
+                    <div class="card stat-card next-reward-stat">
+                        <div class="stat-header">
+                            <h3 class="stat-label">Next Reward</h3>
+                            <div class="stat-icon">🎯</div>
+                        </div>
+                        <div class="stat-value" id="nextRewardAmount">$0</div>
+                        <div class="stat-meta" id="nextRewardText">to unlock next achievement</div>
+                    </div>
+                </div>
+
+                <!-- Donation Update Section -->
+                <div class="card update-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">📈</span>
+                        Update Donations
+                    </h3>
+                    <form id="donationForm" class="donation-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="donationAmount" class="form-label">Amount ($)</label>
+                                <input type="number" id="donationAmount" class="form-input" placeholder="100.00" min="0.01" max="100000" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="donationSource" class="form-label">Source</label>
+                                <select id="donationSource" class="form-input">
+                                    <option value="direct">Direct Donation</option>
+                                    <option value="referral">Referral</option>
+                                    <option value="campaign">Campaign</option>
+                                    <option value="event">Event</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="donationNotes" class="form-label">Notes (Optional)</label>
+                            <input type="text" id="donationNotes" class="form-input" placeholder="Additional details..." maxlength="500">
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <span id="updateBtnText">Update Donations</span>
+                            <span id="updateBtnLoader" class="loading hidden">
+                                <div class="spinner-small"></div>
+                            </span>
+                        </button>
+                        <div class="form-error" id="donationError"></div>
+                    </form>
+                </div>
+
+                <!-- Achievements Section -->
+                <div class="card achievements-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">🏆</span>
+                        Achievements & Rewards
+                    </h3>
+                    <div class="achievements-grid" id="achievementsGrid">
+                        <!-- Achievements will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div id="leaderboard" class="leaderboard">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">🏆 Leaderboard</h1>
+                    <p class="welcome-subtitle">See how you rank among fellow interns</p>
+                </div>
+
+                <!-- Leaderboard Filters -->
+                <div class="card leaderboard-filters">
+                    <div class="filter-group">
+                        <label for="periodFilter" class="filter-label">Time Period:</label>
+                        <select id="periodFilter" class="filter-select">
+                            <option value="all">All Time</option>
+                            <option value="year">This Year</option>
+                            <option value="month">This Month</option>
+                            <option value="week">This Week</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="categoryFilter" class="filter-label">Category:</label>
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="donations">Donations</option>
+                            <option value="referrals">Referrals</option>
+                        </select>
+                    </div>
+                    <button id="refreshLeaderboard" class="btn btn-secondary">Refresh</button>
+                </div>
+
+                <!-- Leaderboard Table -->
+                <div class="card leaderboard-card">
+                    <div class="leaderboard-header">
+                        <h3>Top Performers</h3>
+                        <div class="leaderboard-stats" id="leaderboardStats"></div>
+                    </div>
+                    <div class="leaderboard-table-container">
+                        <table class="leaderboard-table" id="leaderboardTable">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Intern</th>
+                                    <th>Donations</th>
+                                    <th>Achievements</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardBody">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="leaderboard-pagination" id="leaderboardPagination">
+                            
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" id="closeSettings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4>Appearance</h4>
+                    <div class="setting-item">
+                        <label for="themeSelect">Theme:</label>
+                        <select id="themeSelect">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="auto">Auto</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4>Notifications</h4>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="emailNotifications" checked>
+                            Email notifications
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="achievementNotifications" checked>
+                            Achievement notifications
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelSettings">Cancel</button>
+                <button class="btn btn-primary" id="saveSettings">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
